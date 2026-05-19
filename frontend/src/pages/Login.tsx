@@ -38,7 +38,7 @@ export default function Login() {
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md z-10 flex flex-col items-center animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <div className="p-4 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-xl shadow-indigo-500/25 mb-4 text-white">
+        <div className="p-4 bg-linear-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-xl shadow-indigo-500/25 mb-4 text-white">
           <Package className="w-12 h-12" />
         </div>
         <h2 className="text-center text-4xl font-extrabold text-white tracking-tight mb-2">
@@ -55,7 +55,7 @@ export default function Login() {
                 {error}
               </div>
             )}
-            
+
             <div>
               <label className="block text-sm font-semibold text-slate-300 mb-2">Email address</label>
               <div className="relative">
@@ -66,9 +66,8 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="glass-input !pl-12"
+                  className="glass-input pl-12!"
                   placeholder="admin@gmail.com"
-                  required
                 />
               </div>
             </div>
@@ -83,9 +82,8 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="glass-input !pl-12"
+                  className="glass-input pl-12!"
                   placeholder="••••••••"
-                  required
                 />
               </div>
             </div>

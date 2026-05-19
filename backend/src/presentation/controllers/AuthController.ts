@@ -13,13 +13,14 @@ export class AuthController {
 
   async login(req: Request, res: Response): Promise<void> {
     try {
+      
       const { email, password } = req.body;
       const token = await this._loginUseCase.execute(email, password);
 
       res.status(HttpStatus.OK).json(
         ApiResponse.success(Messages.LOGIN_SUCCESS, { token })
       );
-      
+
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       res.status(HttpStatus.UNAUTHORIZED).json(

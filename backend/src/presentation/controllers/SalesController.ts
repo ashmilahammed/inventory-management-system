@@ -11,10 +11,13 @@ export class SalesController {
 
   async recordSale(req: Request, res: Response): Promise<void> {
     try {
+
       const sale = await this._recordSaleUseCase.execute(req.body);
+      
       res.status(HttpStatus.CREATED).json(
         ApiResponse.success(Messages.SALE_RECORDED, sale)
       );
+
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
