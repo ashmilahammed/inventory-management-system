@@ -110,7 +110,7 @@ export default function Sales() {
                     <option value="" disabled>Choose an item from inventory...</option>
                     {items.map(item => (
                       <option key={item.id} value={item.id} className="bg-slate-800">
-                        {item.name} - ${item.price.toFixed(2)} (Stock: {item.quantity})
+                        {item.name} - ₹{item.price.toFixed(2)} (Stock: {item.quantity})
                       </option>
                     ))}
                   </select>
@@ -179,7 +179,7 @@ export default function Sales() {
                 <div>
                   <p className="text-sm font-bold text-slate-400 mb-1 uppercase tracking-wider">Total Amount</p>
                   <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">
-                    ${totalAmount.toFixed(2)}
+                    ₹{totalAmount.toFixed(2)}
                   </p>
                 </div>
                 <button

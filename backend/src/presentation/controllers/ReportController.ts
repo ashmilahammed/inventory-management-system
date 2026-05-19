@@ -3,6 +3,9 @@ import { GetSalesReportUseCase } from "../../application/usecases/reports/GetSal
 import { GetItemsReportUseCase } from "../../application/usecases/reports/GetItemsReportUseCase";
 import { GetCustomerLedgerUseCase } from "../../application/usecases/reports/GetCustomerLedgerUseCase";
 import { GenerateExportUseCase } from "../../application/usecases/exports/GenerateExportUseCase";
+import { HttpStatus } from "../../shared/constants/httpStatus";
+import { Messages } from "../../shared/constants/messages";
+import { ApiResponse } from "../../shared/common/ApiResponse";
 
 export class ReportController {
   constructor(
@@ -15,27 +18,36 @@ export class ReportController {
   async getSalesReport(req: Request, res: Response): Promise<void> {
     try {
       const sales = await this._getSalesReportUseCase.execute();
-      res.status(200).json({ success: true, data: sales });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: error.message });
+      res.status(HttpStatus.OK).json(
+        ApiResponse.success(Messages.SUCCESS, sales)
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
     }
   }
 
   async getItemsReport(req: Request, res: Response): Promise<void> {
     try {
       const items = await this._getItemsReportUseCase.execute();
-      res.status(200).json({ success: true, data: items });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: error.message });
+      res.status(HttpStatus.OK).json(
+        ApiResponse.success(Messages.SUCCESS, items)
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
     }
   }
 
   async getCustomerLedger(req: Request, res: Response): Promise<void> {
     try {
       const ledger = await this._getCustomerLedgerUseCase.execute(req.params.customerId as string);
-      res.status(200).json({ success: true, data: ledger });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: error.message });
+      res.status(HttpStatus.OK).json(
+        ApiResponse.success(Messages.SUCCESS, ledger)
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
     }
   }
 
@@ -57,7 +69,7 @@ export class ReportController {
         const buffer = await this._generateExportUseCase.generateExcel(columns, sales);
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=sales_report.xlsx');
-        res.send(buffer);
+        res.status(HttpStatus.OK).send(buffer);
       } else {
         const columns = [
           { header: 'ID', width: 140 },
@@ -76,10 +88,11 @@ export class ReportController {
         const buffer = await this._generateExportUseCase.generatePdf('Sales Report', columns, data);
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', 'attachment; filename=sales_report.pdf');
-        res.send(buffer);
+        res.status(HttpStatus.OK).send(buffer);
       }
-    } catch (error: any) {
-      res.status(500).json({ success: false, message: error.message });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(ApiResponse.error(message));
     }
   }
 }

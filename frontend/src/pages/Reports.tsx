@@ -102,7 +102,7 @@ export default function Reports() {
                     </span>
                   </td>
                   <td className="p-5 text-right text-slate-300 font-semibold">{sale.quantity}</td>
-                  <td className="p-5 pr-8 text-right text-white font-bold tracking-wide">${sale.totalAmount.toFixed(2)}</td>
+                  <td className="p-5 pr-8 text-right text-white font-bold tracking-wide">₹{sale.totalAmount.toFixed(2)}</td>
                 </tr>
               ))
             )}

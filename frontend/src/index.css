@@ -25,7 +25,7 @@
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-500 hover:to-purple-500 rounded-xl transition-all font-semibold shadow-lg shadow-indigo-500/25 active:scale-[0.98];
+    @apply bg-linear-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-500 hover:to-purple-500 rounded-xl transition-all font-semibold shadow-lg shadow-indigo-500/25 active:scale-[0.98];
   }
 
   .btn-secondary {
@@ -33,7 +33,7 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-cyan-400;
+    @apply bg-clip-text text-transparent bg-linear-to-r from-indigo-400 via-purple-400 to-cyan-400;
   }
 
   /* Custom Scrollbar for sleek dark mode */

@@ -18,7 +18,7 @@ export default function Login() {
     try {
       const response = await api.post('/auth/login', { email, password });
       if (response.data.success) {
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('token', response.data.data.token);
         navigate('/');
       }
     } catch (err: any) {
@@ -66,7 +66,7 @@ export default function Login() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="glass-input pl-12"
+                  className="glass-input !pl-12"
                   placeholder="admin@gmail.com"
                   required
                 />
@@ -83,7 +83,7 @@ export default function Login() {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="glass-input pl-12"
+                  className="glass-input !pl-12"
                   placeholder="••••••••"
                   required
                 />

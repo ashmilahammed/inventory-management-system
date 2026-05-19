@@ -28,13 +28,13 @@ export default function DashboardLayout() {
       <div className="w-72 m-4 rounded-3xl glass-panel flex flex-col z-10 border-white/5">
         <div className="p-8">
           <h1 className="text-3xl font-extrabold tracking-tight flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/25 text-white">
+            <div className="p-2 bg-linear-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/25 text-white">
               <Package className="w-7 h-7" />
             </div>
             <span className="text-gradient">StockSmart</span>
           </h1>
         </div>
-        
+
         <nav className="flex-1 mt-4">
           <ul className="space-y-3 px-6">
             {navItems.map((item) => {
@@ -43,11 +43,10 @@ export default function DashboardLayout() {
                 <li key={item.name}>
                   <Link
                     to={item.path}
-                    className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 ${
-                      isActive 
-                        ? 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' 
+                    className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 ${isActive
+                        ? 'bg-linear-to-r from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]'
                         : 'text-slate-400 hover:text-slate-200 hover:bg-white/5 border border-transparent'
-                    }`}
+                      }`}
                   >
                     <item.icon className={`w-5 h-5 ${isActive ? 'text-indigo-400' : 'text-slate-500'}`} />
                     <span className="font-semibold">{item.name}</span>
@@ -80,14 +79,14 @@ export default function DashboardLayout() {
               <p className="text-sm font-bold text-slate-200">Admin User</p>
               <p className="text-xs text-slate-400">admin@stocksmart.io</p>
             </div>
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 p-[2px]">
+            <div className="w-11 h-11 rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 p-0.5">
               <div className="w-full h-full bg-slate-900 rounded-[10px] flex items-center justify-center text-slate-200 font-bold">
                 A
               </div>
             </div>
           </div>
         </header>
-        
+
         <main className="flex-1 overflow-auto p-10 pt-4">
           <Outlet />
         </main>

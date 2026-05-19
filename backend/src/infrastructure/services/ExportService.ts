@@ -2,7 +2,7 @@ import ExcelJS from "exceljs";
 import PDFDocument from "pdfkit";
 
 export class ExportService {
-  async generateExcel(columns: any[], data: any[]): Promise<Buffer> {
+  async generateExcel<T extends object>(columns: { header: string, key: string, width?: number }[], data: T[]): Promise<Buffer> {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Report");
 

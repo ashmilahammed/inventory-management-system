@@ -3,9 +3,9 @@ import { ExportService } from "../../../infrastructure/services/ExportService";
 export class GenerateExportUseCase {
   constructor(
     private readonly _exportService: ExportService
-  ) {}
+  ) { }
 
-  async generateExcel(columns: any[], data: any[]): Promise<Buffer> {
+  async generateExcel<T extends object>(columns: { header: string, key: string, width?: number }[], data: T[]): Promise<Buffer> {
     return this._exportService.generateExcel(columns, data);
   }
 

@@ -4,6 +4,9 @@ import { GetItemsUseCase } from "../../application/usecases/inventory/GetItemsUs
 import { UpdateItemUseCase } from "../../application/usecases/inventory/UpdateItemUseCase";
 import { DeleteItemUseCase } from "../../application/usecases/inventory/DeleteItemUseCase";
 import { SearchItemsUseCase } from "../../application/usecases/inventory/SearchItemsUseCase";
+import { HttpStatus } from "../../shared/constants/httpStatus";
+import { Messages } from "../../shared/constants/messages";
+import { ApiResponse } from "../../shared/common/ApiResponse";
 
 export class InventoryController {
   constructor(
@@ -17,9 +20,12 @@ export class InventoryController {
   async create(req: Request, res: Response): Promise<void> {
     try {
       const item = await this._createItemUseCase.execute(req.body);
-      res.status(201).json({ success: true, data: item });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: error.message });
+      res.status(HttpStatus.CREATED).json(
+        ApiResponse.success(Messages.ITEM_CREATED, item)
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
     }
   }
 
@@ -29,27 +35,36 @@ export class InventoryController {
       const items = query 
         ? await this._searchItemsUseCase.execute(query)
         : await this._getItemsUseCase.execute();
-      res.status(200).json({ success: true, data: items });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: error.message });
+      res.status(HttpStatus.OK).json(
+        ApiResponse.success(Messages.SUCCESS, items)
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
     }
   }
 
   async update(req: Request, res: Response): Promise<void> {
     try {
       const item = await this._updateItemUseCase.execute(req.params.id as string, req.body);
-      res.status(200).json({ success: true, data: item });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: error.message });
+      res.status(HttpStatus.OK).json(
+        ApiResponse.success(Messages.ITEM_UPDATED, item)
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
     }
   }
 
   async delete(req: Request, res: Response): Promise<void> {
     try {
       await this._deleteItemUseCase.execute(req.params.id as string);
-      res.status(200).json({ success: true, message: "Item deleted" });
-    } catch (error: any) {
-      res.status(400).json({ success: false, message: error.message });
+      res.status(HttpStatus.OK).json(
+        ApiResponse.success(Messages.ITEM_DELETED)
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      res.status(HttpStatus.BAD_REQUEST).json(ApiResponse.error(message));
     }
   }
 }

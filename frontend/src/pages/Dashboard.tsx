@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Package, Users, ShoppingCart, TrendingUp } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import api from '../services/api';
 
 export default function Dashboard() {
@@ -74,7 +75,7 @@ export default function Dashboard() {
           </div>
           <div>
             <p className="text-sm font-semibold text-slate-400">Total Revenue</p>
-            <h3 className="text-3xl font-bold text-slate-100">${stats.revenue.toFixed(2)}</h3>
+            <h3 className="text-3xl font-bold text-slate-100">₹{stats.revenue.toFixed(2)}</h3>
           </div>
         </div>
       </div>
@@ -87,12 +88,12 @@ export default function Dashboard() {
             Your inventory is looking healthy today. Use the navigation panel on the left to manage your stock, onboard new customers, or process sales transactions effortlessly.
           </p>
           <div className="mt-8 flex gap-4">
-            <button className="btn-primary px-6 py-3 rounded-xl flex items-center gap-2">
+            <Link to="/inventory" className="btn-primary px-6 py-3 rounded-xl flex items-center gap-2">
               <Package className="w-5 h-5" /> View Inventory
-            </button>
-            <button className="btn-secondary px-6 py-3 flex items-center gap-2">
+            </Link>
+            <Link to="/sales" className="btn-secondary px-6 py-3 flex items-center gap-2">
               <ShoppingCart className="w-5 h-5" /> Record Sale
-            </button>
+            </Link>
           </div>
         </div>
       </div>

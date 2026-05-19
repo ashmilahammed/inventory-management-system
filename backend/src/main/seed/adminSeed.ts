@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import mongoose from "mongoose";
 import { connectDB } from "../../infrastructure/database/connection";
 import { UserRepository } from "../../infrastructure/repositories/UserRepository";
 import { HashService } from "../../infrastructure/services/HashService";
@@ -55,4 +54,4 @@ const seedAdmin = async () => {
     }
 };
 
-seedAdmin();
+seedAdmin().catch(console.error);

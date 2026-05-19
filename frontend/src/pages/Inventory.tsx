@@ -128,7 +128,7 @@ export default function Inventory() {
                       {item.quantity}
                     </span>
                   </td>
-                  <td className="p-5 text-right text-slate-200 font-semibold">${item.price.toFixed(2)}</td>
+                  <td className="p-5 text-right text-slate-200 font-semibold">₹{item.price.toFixed(2)}</td>
                   <td className="p-5 pr-8">
                     <div className="flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                       <button onClick={() => openModal(item)} className="p-2.5 text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 rounded-xl transition-colors" title="Edit">
@@ -186,7 +186,7 @@ export default function Inventory() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-300 mb-2">Price ($)</label>
+                  <label className="block text-sm font-semibold text-slate-300 mb-2">Price (₹)</label>
                   <input
                     type="number"
                     min="0"
