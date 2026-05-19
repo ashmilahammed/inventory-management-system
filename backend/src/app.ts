@@ -11,7 +11,16 @@ import reportRoutes from "./presentation/routes/reportRoutes";
 
 const app = express();
 
-app.use(cors());
+// app.use(cors();
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://stocksmart-frontend-beta.vercel.app",
+    ],
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use("/api/auth", authRoutes);
