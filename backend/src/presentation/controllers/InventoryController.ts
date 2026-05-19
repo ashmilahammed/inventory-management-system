@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
-import { CreateItemUseCase } from "../../application/usecases/inventory/CreateItemUseCase";
-import { GetItemsUseCase } from "../../application/usecases/inventory/GetItemsUseCase";
-import { UpdateItemUseCase } from "../../application/usecases/inventory/UpdateItemUseCase";
-import { DeleteItemUseCase } from "../../application/usecases/inventory/DeleteItemUseCase";
-import { SearchItemsUseCase } from "../../application/usecases/inventory/SearchItemsUseCase";
+import { ICreateItemUseCase } from "../../application/interfaces/inventory/ICreateItemUseCase";
+import { IGetItemsUseCase } from "../../application/interfaces/inventory/IGetItemsUseCase";
+import { IUpdateItemUseCase } from "../../application/interfaces/inventory/IUpdateItemUseCase";
+import { IDeleteItemUseCase } from "../../application/interfaces/inventory/IDeleteItemUseCase";
+import { ISearchItemsUseCase } from "../../application/interfaces/inventory/ISearchItemsUseCase";
 import { HttpStatus } from "../../shared/constants/httpStatus";
 import { Messages } from "../../shared/constants/messages";
 import { ApiResponse } from "../../shared/common/ApiResponse";
 
 export class InventoryController {
   constructor(
-    private readonly _createItemUseCase: CreateItemUseCase,
-    private readonly _getItemsUseCase: GetItemsUseCase,
-    private readonly _updateItemUseCase: UpdateItemUseCase,
-    private readonly _deleteItemUseCase: DeleteItemUseCase,
-    private readonly _searchItemsUseCase: SearchItemsUseCase
+    private readonly _createItemUseCase: ICreateItemUseCase,
+    private readonly _getItemsUseCase: IGetItemsUseCase,
+    private readonly _updateItemUseCase: IUpdateItemUseCase,
+    private readonly _deleteItemUseCase: IDeleteItemUseCase,
+    private readonly _searchItemsUseCase: ISearchItemsUseCase
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {

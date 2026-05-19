@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
-import { GetSalesReportUseCase } from "../../application/usecases/reports/GetSalesReportUseCase";
-import { GetItemsReportUseCase } from "../../application/usecases/reports/GetItemsReportUseCase";
-import { GetCustomerLedgerUseCase } from "../../application/usecases/reports/GetCustomerLedgerUseCase";
-import { GenerateExportUseCase } from "../../application/usecases/exports/GenerateExportUseCase";
+import { IGetSalesReportUseCase } from "../../application/interfaces/report/IGetSalesReportUseCase";
+import { IGetItemsReportUseCase } from "../../application/interfaces/report/IGetItemsReportUseCase";
+import { IGetCustomerLedgerUseCase } from "../../application/interfaces/report/IGetCustomerLedgerUseCase";
+import { IGenerateExportUseCase } from "../../application/interfaces/exports/IGenerateExportUseCase";
 import { HttpStatus } from "../../shared/constants/httpStatus";
 import { Messages } from "../../shared/constants/messages";
 import { ApiResponse } from "../../shared/common/ApiResponse";
 
 export class ReportController {
   constructor(
-    private readonly _getSalesReportUseCase: GetSalesReportUseCase,
-    private readonly _getItemsReportUseCase: GetItemsReportUseCase,
-    private readonly _getCustomerLedgerUseCase: GetCustomerLedgerUseCase,
-    private readonly _generateExportUseCase: GenerateExportUseCase
+    private readonly _getSalesReportUseCase: IGetSalesReportUseCase,
+    private readonly _getItemsReportUseCase: IGetItemsReportUseCase,
+    private readonly _getCustomerLedgerUseCase: IGetCustomerLedgerUseCase,
+    private readonly _generateExportUseCase: IGenerateExportUseCase
   ) {}
 
   async getSalesReport(req: Request, res: Response): Promise<void> {

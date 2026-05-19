@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import { RecordSaleUseCase } from "../../application/usecases/sales/RecordSaleUseCase";
+import { IRecordSaleUseCase } from "../../application/interfaces/sales/IRecordSaleUseCase";
 import { HttpStatus } from "../../shared/constants/httpStatus";
 import { Messages } from "../../shared/constants/messages";
 import { ApiResponse } from "../../shared/common/ApiResponse";
 
 export class SalesController {
   constructor(
-    private readonly _recordSaleUseCase: RecordSaleUseCase
+    private readonly _recordSaleUseCase: IRecordSaleUseCase
   ) {}
 
   async recordSale(req: Request, res: Response): Promise<void> {

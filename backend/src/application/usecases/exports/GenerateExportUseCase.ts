@@ -1,6 +1,7 @@
 import { ExportService } from "../../../infrastructure/services/ExportService";
+import { IGenerateExportUseCase } from "../../interfaces/exports/IGenerateExportUseCase";
 
-export class GenerateExportUseCase {
+export class GenerateExportUseCase implements IGenerateExportUseCase {
   constructor(
     private readonly _exportService: ExportService
   ) { }

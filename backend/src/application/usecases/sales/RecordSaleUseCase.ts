@@ -2,8 +2,9 @@ import { ISaleRepository } from "../../../domain/repositories/ISaleRepository";
 import { IItemRepository } from "../../../domain/repositories/IItemRepository";
 import { ILedgerRepository } from "../../../domain/repositories/ILedgerRepository";
 import { Sale } from "../../../domain/entities/Sale";
+import { IRecordSaleUseCase } from "../../interfaces/sales/IRecordSaleUseCase";
 
-export class RecordSaleUseCase {
+export class RecordSaleUseCase implements IRecordSaleUseCase {
   constructor(
     private readonly _saleRepository: ISaleRepository,
     private readonly _itemRepository: IItemRepository,
@@ -48,10 +49,6 @@ export class RecordSaleUseCase {
 
     // If customer is provided, record ledger transaction
     if (saleData.customerId) {
-      // Debit because they owe us for the sale, or if it's cash, we could record a credit too to zero it,
-      // but usually a sale increases the customer's balance owed (debit). 
-      // If it's a cash sale, we might not record it to ledger or record both debit and credit.
-      // Let's record debit for the sale.
       await this._ledgerRepository.create({
         customerId: saleData.customerId,
         type: "debit",
@@ -62,7 +59,6 @@ export class RecordSaleUseCase {
       });
 
       if (saleData.isCash) {
-        // Automatically credit the ledger if they paid cash immediately
         await this._ledgerRepository.create({
           customerId: saleData.customerId,
           type: "credit",

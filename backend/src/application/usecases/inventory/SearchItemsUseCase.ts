@@ -1,7 +1,8 @@
 import { IItemRepository } from "../../../domain/repositories/IItemRepository";
 import { Item } from "../../../domain/entities/Item";
+import { ISearchItemsUseCase } from "../../interfaces/inventory/ISearchItemsUseCase";
 
-export class SearchItemsUseCase {
+export class SearchItemsUseCase implements ISearchItemsUseCase {
   constructor(
     private readonly _itemRepository: IItemRepository
   ) {}

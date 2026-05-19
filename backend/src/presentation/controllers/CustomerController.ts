@@ -1,18 +1,18 @@
 import { Request, Response } from "express";
-import { CreateCustomerUseCase } from "../../application/usecases/customer/CreateCustomerUseCase";
-import { GetCustomersUseCase } from "../../application/usecases/customer/GetCustomersUseCase";
-import { UpdateCustomerUseCase } from "../../application/usecases/customer/UpdateCustomerUseCase";
-import { DeleteCustomerUseCase } from "../../application/usecases/customer/DeleteCustomerUseCase";
+import { ICreateCustomerUseCase } from "../../application/interfaces/customer/ICreateCustomerUseCase";
+import { IGetCustomersUseCase } from "../../application/interfaces/customer/IGetCustomersUseCase";
+import { IUpdateCustomerUseCase } from "../../application/interfaces/customer/IUpdateCustomerUseCase";
+import { IDeleteCustomerUseCase } from "../../application/interfaces/customer/IDeleteCustomerUseCase";
 import { HttpStatus } from "../../shared/constants/httpStatus";
 import { Messages } from "../../shared/constants/messages";
 import { ApiResponse } from "../../shared/common/ApiResponse";
 
 export class CustomerController {
   constructor(
-    private readonly _createCustomerUseCase: CreateCustomerUseCase,
-    private readonly _getCustomersUseCase: GetCustomersUseCase,
-    private readonly _updateCustomerUseCase: UpdateCustomerUseCase,
-    private readonly _deleteCustomerUseCase: DeleteCustomerUseCase
+    private readonly _createCustomerUseCase: ICreateCustomerUseCase,
+    private readonly _getCustomersUseCase: IGetCustomersUseCase,
+    private readonly _updateCustomerUseCase: IUpdateCustomerUseCase,
+    private readonly _deleteCustomerUseCase: IDeleteCustomerUseCase
   ) {}
 
   async create(req: Request, res: Response): Promise<void> {

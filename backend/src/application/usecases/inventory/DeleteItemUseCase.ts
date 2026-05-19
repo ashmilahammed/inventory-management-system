@@ -1,6 +1,7 @@
 import { IItemRepository } from "../../../domain/repositories/IItemRepository";
+import { IDeleteItemUseCase } from "../../interfaces/inventory/IDeleteItemUseCase";
 
-export class DeleteItemUseCase {
+export class DeleteItemUseCase implements IDeleteItemUseCase {
   constructor(
     private readonly _itemRepository: IItemRepository
   ) {}

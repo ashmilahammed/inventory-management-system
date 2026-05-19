@@ -1,7 +1,8 @@
 import { ICustomerRepository } from "../../../domain/repositories/ICustomerRepository";
 import { Customer } from "../../../domain/entities/Customer";
+import { IUpdateCustomerUseCase } from "../../interfaces/customer/IUpdateCustomerUseCase";
 
-export class UpdateCustomerUseCase {
+export class UpdateCustomerUseCase implements IUpdateCustomerUseCase {
   constructor(
     private readonly _customerRepository: ICustomerRepository
   ) {}

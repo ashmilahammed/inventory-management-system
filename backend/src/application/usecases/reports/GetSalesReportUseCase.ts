@@ -1,13 +1,13 @@
 import { ISaleRepository } from "../../../domain/repositories/ISaleRepository";
 import { Sale } from "../../../domain/entities/Sale";
+import { IGetSalesReportUseCase } from "../../interfaces/report/IGetSalesReportUseCase";
 
-export class GetSalesReportUseCase {
+export class GetSalesReportUseCase implements IGetSalesReportUseCase {
   constructor(
     private readonly _saleRepository: ISaleRepository
   ) {}
 
   async execute(): Promise<Sale[]> {
-    // Ideally this would have date filters
     return this._saleRepository.findAll();
   }
 }

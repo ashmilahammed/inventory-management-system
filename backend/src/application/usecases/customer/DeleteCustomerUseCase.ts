@@ -1,6 +1,7 @@
 import { ICustomerRepository } from "../../../domain/repositories/ICustomerRepository";
+import { IDeleteCustomerUseCase } from "../../interfaces/customer/IDeleteCustomerUseCase";
 
-export class DeleteCustomerUseCase {
+export class DeleteCustomerUseCase implements IDeleteCustomerUseCase {
   constructor(
     private readonly _customerRepository: ICustomerRepository
   ) {}
