@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Package, Users, ShoppingCart, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import api from '../services/api';
+import { ApiRoutes, PageRoutes } from '../constants/routes';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -15,9 +16,9 @@ export default function Dashboard() {
     const fetchStats = async () => {
       try {
         const [itemsRes, customersRes, salesRes] = await Promise.all([
-          api.get('/inventory'),
-          api.get('/customers'),
-          api.get('/reports/sales'),
+          api.get(ApiRoutes.INVENTORY.BASE),
+          api.get(ApiRoutes.CUSTOMERS.BASE),
+          api.get(ApiRoutes.REPORTS.SALES),
         ]);
 
         const totalRevenue = salesRes.data.data.reduce((sum: number, sale: any) => sum + sale.totalAmount, 0);
@@ -38,7 +39,7 @@ export default function Dashboard() {
   return (
     <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        
+
         <div className="glass-card rounded-3xl p-6 flex items-center gap-5">
           <div className="w-14 h-14 rounded-2xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
             <Package className="w-7 h-7" />
@@ -79,7 +80,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      
+
       <div className="glass-panel rounded-3xl p-10 border-white/5 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-500/10 rounded-full blur-[80px]" />
         <div className="relative z-10">
@@ -88,10 +89,10 @@ export default function Dashboard() {
             Your inventory is looking healthy today. Use the navigation panel on the left to manage your stock, onboard new customers, or process sales transactions effortlessly.
           </p>
           <div className="mt-8 flex gap-4">
-            <Link to="/inventory" className="btn-primary px-6 py-3 rounded-xl flex items-center gap-2">
+            <Link to={PageRoutes.INVENTORY} className="btn-primary px-6 py-3 rounded-xl flex items-center gap-2">
               <Package className="w-5 h-5" /> View Inventory
             </Link>
-            <Link to="/sales" className="btn-secondary px-6 py-3 flex items-center gap-2">
+            <Link to={PageRoutes.SALES} className="btn-secondary px-6 py-3 flex items-center gap-2">
               <ShoppingCart className="w-5 h-5" /> Record Sale
             </Link>
           </div>

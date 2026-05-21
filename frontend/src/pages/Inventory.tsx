@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
 import api from '../services/api';
+import { useDebounce } from '../hooks/useDebounce';
+import { ApiRoutes } from '../constants/routes';
 
 interface Item {
   id: string;
@@ -13,6 +15,7 @@ interface Item {
 export default function Inventory() {
   const [items, setItems] = useState<Item[]>([]);
   const [search, setSearch] = useState('');
+  const debouncedSearch = useDebounce(search, 400);
   const [loading, setLoading] = useState(true);
 
   // Modal state
@@ -25,7 +28,7 @@ export default function Inventory() {
 
   const fetchItems = async (query = '') => {
     try {
-      const response = await api.get(`/inventory${query ? `?q=${query}` : ''}`);
+      const response = await api.get(`${ApiRoutes.INVENTORY.BASE}${query ? `?q=${query}` : ''}`);
       setItems(response.data.data);
     } catch (error) {
       console.error('Error fetching items', error);
@@ -34,17 +37,18 @@ export default function Inventory() {
     }
   };
 
+  // Fire the API call only after the user stops typing for 400 ms
   useEffect(() => {
-    fetchItems(search);
-  }, [search]);
+    fetchItems(debouncedSearch);
+  }, [debouncedSearch]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       if (editingItem) {
-        await api.put(`/inventory/${editingItem.id}`, formData);
+        await api.put(ApiRoutes.INVENTORY.BY_ID(editingItem.id), formData);
       } else {
-        await api.post('/inventory', formData);
+        await api.post(ApiRoutes.INVENTORY.BASE, formData);
       }
       setIsModalOpen(false);
       fetchItems();
@@ -56,7 +60,7 @@ export default function Inventory() {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(`/inventory/${deleteId}`);
+      await api.delete(ApiRoutes.INVENTORY.BY_ID(deleteId));
       setDeleteId(null);
       fetchItems();
     } catch (error) {

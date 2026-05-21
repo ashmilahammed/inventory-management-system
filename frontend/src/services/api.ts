@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { PageRoutes } from '../constants/routes';
 
 const api = axios.create({
   // baseURL: 'http://localhost:4000/api', 
@@ -19,8 +20,8 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
       // Redirect to login only if not already on the login page
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      if (window.location.pathname !== PageRoutes.LOGIN) {
+        window.location.href = PageRoutes.LOGIN;
       }
     }
     return Promise.reject(error);

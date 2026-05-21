@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Tag, User, CreditCard, Banknote } from 'lucide-react';
 import api from '../services/api';
+import { ApiRoutes } from '../constants/routes';
 
 interface Item {
   id: string;
@@ -29,8 +30,8 @@ export default function Sales() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const itemsRes = await api.get('/inventory');
-        const customersRes = await api.get('/customers');
+        const itemsRes = await api.get(ApiRoutes.INVENTORY.BASE);
+        const customersRes = await api.get(ApiRoutes.CUSTOMERS.BASE);
         setItems(itemsRes.data.data.filter((i: Item) => i.quantity > 0));
         setCustomers(customersRes.data.data);
       } catch (error) {
@@ -48,7 +49,7 @@ export default function Sales() {
     setMessage({ type: '', text: '' });
 
     try {
-      await api.post('/sales', {
+      await api.post(ApiRoutes.SALES.BASE, {
         itemId: selectedItem,
         quantity,
         customerId: selectedCustomer || undefined,

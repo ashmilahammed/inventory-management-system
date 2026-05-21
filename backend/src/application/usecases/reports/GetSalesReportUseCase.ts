@@ -5,7 +5,7 @@ import { IGetSalesReportUseCase } from "../../interfaces/report/IGetSalesReportU
 export class GetSalesReportUseCase implements IGetSalesReportUseCase {
   constructor(
     private readonly _saleRepository: ISaleRepository
-  ) {}
+  ) { }
 
   async execute(): Promise<Sale[]> {
     return this._saleRepository.findAll();

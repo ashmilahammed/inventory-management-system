@@ -1,5 +1,6 @@
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Package, Users, ShoppingCart, BarChart, LogOut } from 'lucide-react';
+import { PageRoutes } from '../constants/routes';
 
 export default function DashboardLayout() {
   const navigate = useNavigate();
@@ -7,15 +8,15 @@ export default function DashboardLayout() {
 
   const handleLogout = () => {
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate(PageRoutes.LOGIN);
   };
 
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Inventory', path: '/inventory', icon: Package },
-    { name: 'Customers', path: '/customers', icon: Users },
-    { name: 'Sales', path: '/sales', icon: ShoppingCart },
-    { name: 'Reports', path: '/reports', icon: BarChart },
+    { name: 'Dashboard', path: PageRoutes.DASHBOARD, icon: LayoutDashboard },
+    { name: 'Inventory', path: PageRoutes.INVENTORY, icon: Package },
+    { name: 'Customers', path: PageRoutes.CUSTOMERS, icon: Users },
+    { name: 'Sales', path: PageRoutes.SALES, icon: ShoppingCart },
+    { name: 'Reports', path: PageRoutes.REPORTS, icon: BarChart },
   ];
 
   return (
@@ -25,7 +26,7 @@ export default function DashboardLayout() {
       <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-purple-900/20 blur-[120px] pointer-events-none" />
 
       {/* Sidebar */}
-      <div className="w-72 m-4 rounded-3xl glass-panel flex flex-col z-10 border-white/5">
+      <div className="w-72 m-4 rounded-3xl glass-panel flex flex-col z-10 border-white/5 no-print">
         <div className="p-8">
           <h1 className="text-3xl font-extrabold tracking-tight flex items-center gap-3">
             <div className="p-2 bg-linear-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg shadow-indigo-500/25 text-white">
@@ -44,8 +45,8 @@ export default function DashboardLayout() {
                   <Link
                     to={item.path}
                     className={`flex items-center gap-4 px-5 py-3.5 rounded-2xl transition-all duration-300 ${isActive
-                        ? 'bg-linear-to-r from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/5 border border-transparent'
+                      ? 'bg-linear-to-r from-indigo-500/20 to-purple-500/20 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-white/5 border border-transparent'
                       }`}
                   >
                     <item.icon className={`w-5 h-5 ${isActive ? 'text-indigo-400' : 'text-slate-500'}`} />
@@ -70,7 +71,7 @@ export default function DashboardLayout() {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0 z-10">
-        <header className="h-24 flex items-center justify-between px-10">
+        <header className="h-24 flex items-center justify-between px-10 no-print">
           <h2 className="text-2xl font-bold text-slate-100">
             {navItems.find(item => item.path === location.pathname)?.name || 'Dashboard'}
           </h2>

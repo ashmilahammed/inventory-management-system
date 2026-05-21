@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Users } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Plus, Edit, Trash2, Users, BookOpen } from 'lucide-react';
 import api from '../services/api';
+import { ApiRoutes, PageRoutes } from '../constants/routes';
 
 interface Customer {
   id: string;
@@ -23,7 +25,7 @@ export default function Customers() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await api.get('/customers');
+      const response = await api.get(ApiRoutes.CUSTOMERS.BASE);
       setCustomers(response.data.data);
     } catch (error) {
       console.error('Error fetching customers', error);
@@ -40,9 +42,9 @@ export default function Customers() {
     e.preventDefault();
     try {
       if (editingCustomer) {
-        await api.put(`/customers/${editingCustomer.id}`, formData);
+        await api.put(ApiRoutes.CUSTOMERS.BY_ID(editingCustomer.id), formData);
       } else {
-        await api.post('/customers', formData);
+        await api.post(ApiRoutes.CUSTOMERS.BASE, formData);
       }
       setIsModalOpen(false);
       fetchCustomers();
@@ -54,7 +56,7 @@ export default function Customers() {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(`/customers/${deleteId}`);
+      await api.delete(ApiRoutes.CUSTOMERS.BY_ID(deleteId));
       setDeleteId(null);
       fetchCustomers();
     } catch (error) {
@@ -76,63 +78,66 @@ export default function Customers() {
   return (
     <>
       <div className="glass-panel rounded-3xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 border-white/10">
-      <div className="p-8 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/20">
-        <h3 className="text-xl font-bold text-white flex items-center gap-3">
-          <div className="p-2 bg-cyan-500/20 rounded-lg text-cyan-400">
-            <Users className="w-5 h-5" />
-          </div>
-          Client Roster
-        </h3>
-        <button
-          onClick={() => openModal()}
-          className="btn-primary px-6 py-3 flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add Customer
-        </button>
-      </div>
+        <div className="p-8 border-b border-slate-700/50 flex justify-between items-center bg-slate-800/20">
+          <h3 className="text-xl font-bold text-white flex items-center gap-3">
+            <div className="p-2 bg-cyan-500/20 rounded-lg text-cyan-400">
+              <Users className="w-5 h-5" />
+            </div>
+            Client Roster
+          </h3>
+          <button
+            onClick={() => openModal()}
+            className="btn-primary px-6 py-3 flex items-center gap-2"
+          >
+            <Plus className="w-5 h-5" />
+            Add Customer
+          </button>
+        </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
-          <thead>
-            <tr className="bg-slate-900/40 text-slate-400 text-sm uppercase tracking-widest border-b border-slate-700/50 font-semibold">
-              <th className="p-5 pl-8">Name</th>
-              <th className="p-5">Contact</th>
-              <th className="p-5">Address</th>
-              <th className="p-5 text-center pr-8">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-700/30">
-            {loading ? (
-              <tr>
-                <td colSpan={4} className="p-10 text-center text-slate-500">Loading...</td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="bg-slate-900/40 text-slate-400 text-sm uppercase tracking-widest border-b border-slate-700/50 font-semibold">
+                <th className="p-5 pl-8">Name</th>
+                <th className="p-5">Contact</th>
+                <th className="p-5">Address</th>
+                <th className="p-5 text-center pr-8">Actions</th>
               </tr>
-            ) : customers.length === 0 ? (
-              <tr>
-                <td colSpan={4} className="p-10 text-center text-slate-500">No customers found</td>
-              </tr>
-            ) : (
-              customers.map((customer) => (
-                <tr key={customer.id} className="hover:bg-slate-800/30 transition-colors group">
-                  <td className="p-5 pl-8 font-semibold text-slate-200">{customer.name}</td>
-                  <td className="p-5 text-cyan-400 font-medium">{customer.mobileNumber}</td>
-                  <td className="p-5 text-slate-400">{customer.address}</td>
-                  <td className="p-5 pr-8">
-                    <div className="flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => openModal(customer)} className="p-2.5 text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 rounded-xl transition-colors" title="Edit">
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => setDeleteId(customer.id)} className="p-2.5 text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-xl transition-colors" title="Delete">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
+            </thead>
+            <tbody className="divide-y divide-slate-700/30">
+              {loading ? (
+                <tr>
+                  <td colSpan={4} className="p-10 text-center text-slate-500">Loading...</td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ) : customers.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-10 text-center text-slate-500">No customers found</td>
+                </tr>
+              ) : (
+                customers.map((customer) => (
+                  <tr key={customer.id} className="hover:bg-slate-800/30 transition-colors group">
+                    <td className="p-5 pl-8 font-semibold text-slate-200">{customer.name}</td>
+                    <td className="p-5 text-cyan-400 font-medium">{customer.mobileNumber}</td>
+                    <td className="p-5 text-slate-400">{customer.address}</td>
+                    <td className="p-5 pr-8">
+                      <div className="flex justify-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Link to={`${PageRoutes.REPORTS}?tab=ledger&customerId=${customer.id}`} className="p-2.5 text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 rounded-xl transition-colors" title="View Ledger">
+                          <BookOpen className="w-4 h-4" />
+                        </Link>
+                        <button onClick={() => openModal(customer)} className="p-2.5 text-indigo-400 bg-indigo-500/10 hover:bg-indigo-500/20 rounded-xl transition-colors" title="Edit">
+                          <Edit className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => setDeleteId(customer.id)} className="p-2.5 text-red-400 bg-red-500/10 hover:bg-red-500/20 rounded-xl transition-colors" title="Delete">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
 
       </div>
 

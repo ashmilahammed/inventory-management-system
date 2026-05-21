@@ -2,12 +2,12 @@ import express from "express";
 import cors from "cors";
 
 import authRoutes from "./presentation/routes/authRoutes";
-
 import testRoutes from "./presentation/routes/testRoutes";
 import inventoryRoutes from "./presentation/routes/inventoryRoutes";
 import customerRoutes from "./presentation/routes/customerRoutes";
 import salesRoutes from "./presentation/routes/salesRoutes";
 import reportRoutes from "./presentation/routes/reportRoutes";
+import { Routes } from "./shared/constants/routes";
 
 const app = express();
 
@@ -23,12 +23,11 @@ app.use(
 );
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-
-app.use("/api/test", testRoutes);
-app.use("/api/inventory", inventoryRoutes);
-app.use("/api/customers", customerRoutes);
-app.use("/api/sales", salesRoutes);
-app.use("/api/reports", reportRoutes);
+app.use(Routes.AUTH.BASE, authRoutes);
+app.use(Routes.TEST.BASE, testRoutes);
+app.use(Routes.INVENTORY.BASE, inventoryRoutes);
+app.use(Routes.CUSTOMERS.BASE, customerRoutes);
+app.use(Routes.SALES.BASE, salesRoutes);
+app.use(Routes.REPORTS.BASE, reportRoutes);
 
 export default app;

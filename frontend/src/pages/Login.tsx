@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Package, Lock, Mail } from 'lucide-react';
 import api from '../services/api';
+import { ApiRoutes, PageRoutes } from '../constants/routes';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -16,10 +17,10 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await api.post('/auth/login', { email, password });
+      const response = await api.post(ApiRoutes.AUTH.LOGIN, { email, password });
       if (response.data.success) {
         localStorage.setItem('token', response.data.data.token);
-        navigate('/');
+        navigate(PageRoutes.DASHBOARD, { replace: true });
       }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to login');

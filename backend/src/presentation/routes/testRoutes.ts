@@ -4,11 +4,12 @@ import {
   authMiddleware,
   AuthenticatedRequest
 } from "../middleware/authMiddleware";
+import { Routes } from "../../shared/constants/routes";
 
 const router = express.Router();
 
 router.get(
-  "/protected",
+  Routes.TEST.PROTECTED,
   authMiddleware,
 
   (req: AuthenticatedRequest, res) => {

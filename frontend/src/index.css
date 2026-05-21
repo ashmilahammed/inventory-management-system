@@ -11,7 +11,7 @@
   .glass-panel {
     @apply bg-slate-900/40 backdrop-blur-xl border border-slate-700/50 shadow-2xl;
   }
-  
+
   .glass-card {
     @apply bg-slate-800/40 backdrop-blur-lg border border-slate-700/50 shadow-xl transition-all duration-300;
   }
@@ -41,13 +41,156 @@
     width: 8px;
     height: 8px;
   }
+
   ::-webkit-scrollbar-track {
     background: transparent;
   }
+
   ::-webkit-scrollbar-thumb {
     @apply bg-slate-700 rounded-full;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-slate-600;
+  }
+}
+
+/* Screen-only: hide print header block on screen */
+.print-only {
+  display: none;
+}
+
+/* Print utility: force black text on print only */
+@media print {
+  .print-text-black {
+    color: black !important;
+  }
+
+  /* Show the print-only header block */
+  .print-only {
+    display: block !important;
+  }
+
+  /* ── Global reset: nuke ALL dark backgrounds and text colours ── */
+  *,
+  *::before,
+  *::after {
+    background: white !important;
+    background-color: white !important;
+    background-image: none !important;
+    color: black !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  body {
+    font-size: 11pt !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide interactive / chrome elements */
+  .no-print,
+  button,
+  select,
+  nav,
+  header,
+  aside,
+  iframe,
+  [class*="tabs-nav"],
+  [class*="no-print"] {
+    display: none !important;
+  }
+
+  /* Strip page chrome spacing */
+  html, body, main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+  }
+
+  /* Flatten layout: only show main content column */
+  [class*="flex"][class*="h-screen"] {
+    display: block !important;
+  }
+
+  /* Remove all glow / blur decoration */
+  .absolute,
+  [class*="blur"],
+  [class*="glow"],
+  [class*="pointer-events-none"] {
+    display: none !important;
+  }
+
+  /* Table formatting */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 12px !important;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+  }
+
+  th {
+    background-color: #f1f5f9 !important;
+    border-top: 1px solid #334155 !important;
+    border-bottom: 2px solid #334155 !important;
+    font-weight: 700 !important;
+    padding: 8px 10px !important;
+    font-size: 9pt !important;
+    letter-spacing: 0.05em !important;
+  }
+
+  td {
+    border-bottom: 1px solid #cbd5e1 !important;
+    padding: 8px 10px !important;
+    font-size: 10pt !important;
+  }
+
+  /* Print header block */
+  .print-only {
+    margin-bottom: 20px !important;
+    padding-bottom: 12px !important;
+    border-bottom: 2px solid #334155 !important;
+  }
+
+  .print-only h1 {
+    font-size: 22pt !important;
+    font-weight: 800 !important;
+    margin: 0 0 4px 0 !important;
+  }
+
+  .print-only p,
+  .print-only span {
+    font-size: 9pt !important;
+  }
+
+  /* Override Tailwind colour utilities explicitly */
+  [class*="text-slate"],
+  [class*="text-white"],
+  [class*="text-indigo"],
+  [class*="text-purple"],
+  [class*="text-emerald"],
+  [class*="text-cyan"],
+  [class*="text-rose"],
+  [class*="text-gradient"] {
+    color: black !important;
+  }
+
+  [class*="bg-slate"],
+  [class*="bg-indigo"],
+  [class*="bg-purple"],
+  [class*="bg-emerald"],
+  [class*="bg-rose"],
+  [class*="bg-cyan"],
+  [class*="bg-white"],
+  [class*="glass-"] {
+    background: white !important;
+    background-color: white !important;
   }
 }
