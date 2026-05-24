@@ -373,7 +373,7 @@ export default function Reports() {
                 <select
                   value={customerId}
                   onChange={(e) => handleCustomerChange(e.target.value)}
-                  className="glass-input !w-auto min-w-[240px]"
+                  className="glass-input w-auto min-w-60"
                 >
                   <option value="" className="bg-slate-900 text-slate-500">Choose Customer...</option>
                   {customers.map((c) => (

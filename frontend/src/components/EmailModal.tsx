@@ -156,7 +156,7 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
                     placeholder="e.g. client@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="glass-input pl-10"
+                    className="glass-input !pl-11"
                   />
                 </div>
               </div>
