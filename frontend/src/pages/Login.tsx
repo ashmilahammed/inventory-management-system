@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Package, Lock, Mail } from 'lucide-react';
+import axios from 'axios';
 import api from '../services/api';
 import { ApiRoutes, PageRoutes } from '../constants/routes';
 
@@ -22,8 +23,12 @@ export default function Login() {
         localStorage.setItem('token', response.data.data.token);
         navigate(PageRoutes.DASHBOARD, { replace: true });
       }
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to login');
+    } catch (err) {
+      let errMsg = 'Failed to login';
+      if (axios.isAxiosError(err)) {
+        errMsg = err.response?.data?.message || errMsg;
+      }
+      setError(errMsg);
     } finally {
       setLoading(false);
     }

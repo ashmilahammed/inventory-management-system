@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Tag, User, CreditCard, Banknote } from 'lucide-react';
+import axios from 'axios';
 import api from '../services/api';
 import { ApiRoutes } from '../constants/routes';
 
@@ -63,8 +64,12 @@ export default function Sales() {
       
       setQuantity(1);
       setSelectedItem('');
-    } catch (error: any) {
-      setMessage({ type: 'error', text: error.response?.data?.message || 'Error recording sale' });
+    } catch (error) {
+      let errMsg = 'Error recording sale';
+      if (axios.isAxiosError(error)) {
+        errMsg = error.response?.data?.message || errMsg;
+      }
+      setMessage({ type: 'error', text: errMsg });
     } finally {
       setLoading(false);
     }
@@ -81,7 +86,7 @@ export default function Sales() {
 
         <div className="relative z-10">
           <div className="p-8 border-b border-slate-700/50 bg-slate-800/30 text-center">
-            <div className="inline-flex items-center justify-center p-4 bg-gradient-to-br from-indigo-500/20 to-purple-600/20 rounded-2xl mb-4 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+            <div className="inline-flex items-center justify-center p-4 bg-linear-to-br from-indigo-500/20 to-purple-600/20 rounded-2xl mb-4 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
               <ShoppingCart className="w-10 h-10 text-indigo-400" />
             </div>
             <h2 className="text-3xl font-extrabold text-white tracking-tight">Point of Sale</h2>
@@ -134,7 +139,7 @@ export default function Sales() {
                 {/* Payment Method */}
                 <div className="space-y-3">
                   <label className="text-sm font-semibold text-slate-300">Payment Method</label>
-                  <div className="grid grid-cols-2 gap-3 h-[52px]">
+                  <div className="grid grid-cols-2 gap-3 h-13">
                     <button
                       type="button"
                       onClick={() => setIsCash(true)}
@@ -179,7 +184,7 @@ export default function Sales() {
               <div className="pt-8 mt-4 border-t border-slate-700/50 flex flex-col md:flex-row items-center justify-between gap-6">
                 <div>
                   <p className="text-sm font-bold text-slate-400 mb-1 uppercase tracking-wider">Total Amount</p>
-                  <p className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-indigo-400">
+                  <p className="text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-cyan-400 to-indigo-400">
                     ₹{totalAmount.toFixed(2)}
                   </p>
                 </div>

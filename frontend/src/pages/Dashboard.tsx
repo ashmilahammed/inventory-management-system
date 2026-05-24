@@ -21,7 +21,7 @@ export default function Dashboard() {
           api.get(ApiRoutes.REPORTS.SALES),
         ]);
 
-        const totalRevenue = salesRes.data.data.reduce((sum: number, sale: any) => sum + sale.totalAmount, 0);
+        const totalRevenue = salesRes.data.data.reduce((sum: number, sale: { totalAmount: number }) => sum + sale.totalAmount, 0);
 
         setStats({
           items: itemsRes.data.data.length,

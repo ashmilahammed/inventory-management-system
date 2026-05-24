@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Mail, Send, ExternalLink, FileText, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
 import api from '../services/api';
 import { ApiRoutes } from '../constants/routes';
@@ -76,10 +77,10 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 z-55 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-350">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-350">
       <div 
-        className="w-full max-w-lg rounded-3xl glass-panel border border-white/10 shadow-2xl overflow-hidden flex flex-col z-10 animate-in zoom-in-95 duration-300 bg-slate-900/90 text-slate-100"
+        className="w-full max-w-lg max-h-[90vh] rounded-3xl glass-panel border border-white/10 shadow-2xl overflow-hidden flex flex-col z-10 animate-in zoom-in-95 duration-300 bg-slate-900/90 text-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
@@ -135,7 +136,7 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
             <form onSubmit={handleSubmit} className="space-y-5">
               {error && (
                 <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-2xl flex gap-3 items-start text-sm">
-                  <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold">Execution Failed</span>
                     <p className="text-rose-350/90 text-xs mt-0.5">{error}</p>
@@ -246,6 +247,7 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
