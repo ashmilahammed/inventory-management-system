@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Package, Users, ShoppingCart, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import api from '../services/api';
-import { ApiRoutes, PageRoutes } from '../constants/routes';
+import { inventoryApi } from '../api/inventory.api';
+import { customersApi } from '../api/customers.api';
+import { reportsApi } from '../api/report.api';
+import { PageRoutes } from '../constants/routes';
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -16,17 +18,17 @@ export default function Dashboard() {
     const fetchStats = async () => {
       try {
         const [itemsRes, customersRes, salesRes] = await Promise.all([
-          api.get(ApiRoutes.INVENTORY.BASE),
-          api.get(ApiRoutes.CUSTOMERS.BASE),
-          api.get(ApiRoutes.REPORTS.SALES),
+          inventoryApi.getItems(),
+          customersApi.getCustomers(),
+          reportsApi.getSalesReport(),
         ]);
 
-        const totalRevenue = salesRes.data.data.reduce((sum: number, sale: { totalAmount: number }) => sum + sale.totalAmount, 0);
+        const totalRevenue = salesRes.data.reduce((sum: number, sale: { totalAmount: number }) => sum + sale.totalAmount, 0);
 
         setStats({
-          items: itemsRes.data.data.length,
-          customers: customersRes.data.data.length,
-          sales: salesRes.data.data.length,
+          items: itemsRes.data.length,
+          customers: customersRes.data.length,
+          sales: salesRes.data.length,
           revenue: totalRevenue,
         });
       } catch (error) {

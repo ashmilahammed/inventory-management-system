@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { FileText, Download, Package, BookOpen , User, ShoppingBag, Printer, Mail } from 'lucide-react';
-import api from '../services/api';
+import { reportsApi } from '../api/report.api';
+import { customersApi } from '../api/customers.api';
 import EmailModal from '../components/EmailModal';
 import { ApiRoutes } from '../constants/routes';
 
@@ -46,6 +47,8 @@ export default function Reports() {
   const [ledger, setLedger] = useState<LedgerTransaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
 
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('tab') || 'sales';
@@ -56,20 +59,20 @@ export default function Reports() {
       setLoading(true);
       try {
         if (activeTab === 'sales') {
-          const res = await api.get(ApiRoutes.REPORTS.SALES);
-          setSales(res.data.data);
+          const res = await reportsApi.getSalesReport();
+          setSales(res.data);
         } else if (activeTab === 'items') {
-          const res = await api.get(ApiRoutes.REPORTS.ITEMS);
-          setItems(res.data.data);
+          const res = await reportsApi.getItemsReport();
+          setItems(res.data);
         } else if (activeTab === 'ledger') {
           // Fetch customers list
-          const custRes = await api.get(ApiRoutes.CUSTOMERS.BASE);
-          setCustomers(custRes.data.data);
+          const custRes = await customersApi.getCustomers();
+          setCustomers(custRes.data);
 
           // Fetch ledger if a customer is selected
           if (customerId) {
-            const ledRes = await api.get(ApiRoutes.REPORTS.LEDGER(customerId));
-            setLedger(ledRes.data.data);
+            const ledRes = await reportsApi.getLedgerReport(customerId);
+            setLedger(ledRes.data);
           } else {
             setLedger([]);
           }
@@ -81,6 +84,10 @@ export default function Reports() {
       }
     };
     fetchData();
+  }, [activeTab, customerId]);
+
+  useEffect(() => {
+    setCurrentPage(1);
   }, [activeTab, customerId]);
 
   const handleTabChange = (tab: string) => {
@@ -110,10 +117,10 @@ export default function Reports() {
 
     if (!url) return;
 
-    api.get(url, { responseType: 'blob' })
-      .then(response => {
+    reportsApi.exportReport(url)
+      .then(blob => {
         const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(new Blob([response.data]));
+        link.href = window.URL.createObjectURL(blob);
         link.download = filename;
         link.click();
       })
@@ -157,6 +164,37 @@ export default function Reports() {
   const totalLedgerDebits = ledger.filter(tx => tx.type === 'debit').reduce((sum, tx) => sum + tx.amount, 0);
   const totalLedgerCredits = ledger.filter(tx => tx.type === 'credit').reduce((sum, tx) => sum + tx.amount, 0);
   const currentOutstandingBalance = totalLedgerDebits - totalLedgerCredits;
+
+  const renderPagination = (totalRecords: number) => {
+    if (totalRecords <= itemsPerPage) return null;
+    const totalPages = Math.ceil(totalRecords / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = Math.min(currentPage * itemsPerPage, totalRecords);
+
+    return (
+      <div className="flex items-center justify-between border-t border-slate-700/50 bg-slate-900/10 px-8 py-4 no-print mt-auto">
+        <div className="text-sm text-slate-400">
+          Showing <span className="font-semibold text-slate-200">{startIndex + 1}</span> to <span className="font-semibold text-slate-200">{endIndex}</span> of <span className="font-semibold text-slate-200">{totalRecords}</span> entries
+        </div>
+        <div className="flex gap-2">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            className="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-350 hover:bg-slate-700 hover:text-white rounded-xl disabled:opacity-30 disabled:hover:bg-slate-800 disabled:hover:text-slate-350 transition-all font-semibold text-sm cursor-pointer disabled:cursor-not-allowed"
+          >
+            Previous
+          </button>
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            className="px-4 py-2 bg-slate-800 border border-slate-700 text-slate-350 hover:bg-slate-700 hover:text-white rounded-xl disabled:opacity-30 disabled:hover:bg-slate-800 disabled:hover:text-slate-350 transition-all font-semibold text-sm cursor-pointer disabled:cursor-not-allowed"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="glass-panel rounded-3xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-500 border-white/10">
@@ -289,7 +327,7 @@ export default function Reports() {
                   </tr>
                 ) : (
                   <>
-                    {sales.map((sale) => (
+                    {sales.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((sale) => (
                       <tr key={sale.id} className="hover:bg-slate-800/30 transition-colors">
                         <td className="p-5 pl-8 text-slate-300 font-medium">
                           {new Date(sale.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
@@ -313,6 +351,7 @@ export default function Reports() {
                 )}
               </tbody>
             </table>
+            {renderPagination(sales.length)}
           </div>
         )}
 
@@ -339,7 +378,7 @@ export default function Reports() {
                   </tr>
                 ) : (
                   <>
-                    {items.map((item) => (
+                    {items.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((item) => (
                       <tr key={item.id} className="hover:bg-slate-800/30 transition-colors">
                         <td className="p-5 pl-8 text-slate-500 font-mono text-xs">{item.id}</td>
                         <td className="p-5 text-slate-200 font-semibold">
@@ -361,6 +400,7 @@ export default function Reports() {
                 )}
               </tbody>
             </table>
+            {renderPagination(items.length)}
           </div>
         )}
 
@@ -451,7 +491,7 @@ export default function Reports() {
                           <td colSpan={6} className="p-10 text-center text-slate-500">No ledger transactions found for this customer.</td>
                         </tr>
                       ) : (
-                        ledgerWithBalances.map((tx) => (
+                        ledgerWithBalances.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((tx) => (
                           <tr key={tx.id} className="hover:bg-slate-800/30 transition-colors">
                             <td className="p-5 pl-8 text-slate-300 font-medium">
                               {new Date(tx.date).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
@@ -475,6 +515,7 @@ export default function Reports() {
                     </tbody>
                   </table>
                 </div>
+                {renderPagination(ledgerWithBalances.length)}
 
               </div>
             )}

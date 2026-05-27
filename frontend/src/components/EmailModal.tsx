@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Mail, Send, ExternalLink, FileText, CheckCircle2, AlertTriangle, Loader2 } from 'lucide-react';
-import api from '../services/api';
-import { ApiRoutes } from '../constants/routes';
+import axios from 'axios';
+import { reportsApi } from '../api/report.api';
 
 interface EmailModalProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
     setSuccessData(null);
 
     try {
-      const response = await api.post(ApiRoutes.REPORTS.EMAIL, {
+      const response = await reportsApi.emailReport({
         email,
         subject,
         body,
@@ -52,18 +52,21 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
         format,
         customerId
       });
-      
-      if (response.data.success) {
+
+      if (response.success) {
         setSuccessData({
-          message: response.data.message || 'Report has been successfully emailed!',
-          previewUrl: response.data.data?.previewUrl
+          message: response.message || 'Report has been successfully emailed!',
+          previewUrl: response.data?.previewUrl
         });
       } else {
-        setError(response.data.message || 'Failed to send report email.');
+        setError(response.message || 'Failed to send report email.');
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error('Error sending report email:', err);
-      const errMsg = err.response?.data?.message || 'An error occurred while connecting to the email service.';
+      let errMsg = 'An error occurred while connecting to the email service.';
+      if (axios.isAxiosError(err)) {
+        errMsg = err.response?.data?.message || errMsg;
+      }
       setError(errMsg);
     } finally {
       setLoading(false);
@@ -79,7 +82,7 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
 
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-350">
-      <div 
+      <div
         className="w-full max-w-lg max-h-[90vh] rounded-3xl glass-panel border border-white/10 shadow-2xl overflow-hidden flex flex-col z-10 animate-in zoom-in-95 duration-300 bg-slate-900/90 text-slate-100"
         onClick={(e) => e.stopPropagation()}
       >
@@ -89,7 +92,7 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
             <Mail className="w-5 h-5 text-indigo-400" />
             Email Document
           </h3>
-          <button 
+          <button
             onClick={handleResetAndClose}
             className="p-1.5 text-slate-400 hover:text-white bg-slate-800/40 hover:bg-slate-700/40 rounded-lg transition-colors cursor-pointer"
           >
@@ -113,9 +116,9 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
                 <div className="mt-4 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 max-w-md w-full">
                   <span className="text-xs font-bold uppercase tracking-wider text-indigo-400 block mb-1">Development Mailbox</span>
                   <p className="text-xs text-slate-400 mb-3">Since SMTP environment credentials are unconfigured, Ethereal test inbox was used.</p>
-                  <a 
-                    href={successData.previewUrl} 
-                    target="_blank" 
+                  <a
+                    href={successData.previewUrl}
+                    target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center justify-center gap-2 px-5 py-2.5 w-full bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-xs font-bold transition-all shadow-lg shadow-indigo-500/25"
                   >
@@ -156,7 +159,7 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
                     placeholder="e.g. client@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="glass-input !pl-11"
+                    className="glass-input pl-11!"
                   />
                 </div>
               </div>
@@ -167,11 +170,10 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
                   <button
                     type="button"
                     onClick={() => setFormat('pdf')}
-                    className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
-                      format === 'pdf'
+                    className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${format === 'pdf'
                         ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20'
                         : 'bg-slate-800/40 border-slate-700/50 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-                    }`}
+                      }`}
                   >
                     <FileText className="w-4 h-4" />
                     PDF Statement
@@ -179,11 +181,10 @@ export default function EmailModal({ isOpen, onClose, reportType, customerId, cu
                   <button
                     type="button"
                     onClick={() => setFormat('excel')}
-                    className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
-                      format === 'excel'
+                    className={`flex items-center justify-center gap-2 py-3 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${format === 'excel'
                         ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-500/20'
                         : 'bg-slate-800/40 border-slate-700/50 text-slate-400 hover:bg-slate-800 hover:text-slate-200'
-                    }`}
+                      }`}
                   >
                     <FileText className="w-4 h-4" />
                     Excel Worksheet

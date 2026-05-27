@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { ShoppingCart, Tag, User, CreditCard, Banknote } from 'lucide-react';
 import axios from 'axios';
-import api from '../services/api';
-import { ApiRoutes } from '../constants/routes';
+import { inventoryApi } from '../api/inventory.api';
+import { customersApi } from '../api/customers.api';
+import { salesApi } from '../api/sales.api';
 
 interface Item {
   id: string;
@@ -31,10 +32,10 @@ export default function Sales() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const itemsRes = await api.get(ApiRoutes.INVENTORY.BASE);
-        const customersRes = await api.get(ApiRoutes.CUSTOMERS.BASE);
-        setItems(itemsRes.data.data.filter((i: Item) => i.quantity > 0));
-        setCustomers(customersRes.data.data);
+        const itemsRes = await inventoryApi.getItems();
+        const customersRes = await customersApi.getCustomers();
+        setItems(itemsRes.data.filter((i: Item) => i.quantity > 0));
+        setCustomers(customersRes.data);
       } catch (error) {
         console.error('Error fetching data for POS', error);
       }
@@ -50,7 +51,7 @@ export default function Sales() {
     setMessage({ type: '', text: '' });
 
     try {
-      await api.post(ApiRoutes.SALES.BASE, {
+      await salesApi.recordSale({
         itemId: selectedItem,
         quantity,
         customerId: selectedCustomer || undefined,
@@ -59,7 +60,7 @@ export default function Sales() {
       setMessage({ type: 'success', text: 'Sale recorded successfully!' });
       
       setItems(items.map(item => 
-        item.id === selectedItem ? { ...item, quantity: item.quantity - quantity } : item
+         item.id === selectedItem ? { ...item, quantity: item.quantity - quantity } : item
       ).filter(item => item.quantity > 0));
       
       setQuantity(1);

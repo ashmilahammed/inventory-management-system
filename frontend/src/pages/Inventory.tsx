@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2 } from 'lucide-react';
-import api from '../services/api';
+import { inventoryApi } from '../api/inventory.api';
 import { useDebounce } from '../hooks/useDebounce';
-import { ApiRoutes } from '../constants/routes';
 
 interface Item {
   id: string;
@@ -28,8 +27,8 @@ export default function Inventory() {
 
   const fetchItems = async (query = '') => {
     try {
-      const response = await api.get(`${ApiRoutes.INVENTORY.BASE}${query ? `?q=${query}` : ''}`);
-      setItems(response.data.data);
+      const response = await inventoryApi.getItems(query);
+      setItems(response.data);
     } catch (error) {
       console.error('Error fetching items', error);
     } finally {
@@ -46,9 +45,9 @@ export default function Inventory() {
     e.preventDefault();
     try {
       if (editingItem) {
-        await api.put(ApiRoutes.INVENTORY.BY_ID(editingItem.id), formData);
+        await inventoryApi.updateItem(editingItem.id, formData);
       } else {
-        await api.post(ApiRoutes.INVENTORY.BASE, formData);
+        await inventoryApi.createItem(formData);
       }
       setIsModalOpen(false);
       fetchItems();
@@ -60,7 +59,7 @@ export default function Inventory() {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(ApiRoutes.INVENTORY.BY_ID(deleteId));
+      await inventoryApi.deleteItem(deleteId);
       setDeleteId(null);
       fetchItems();
     } catch (error) {

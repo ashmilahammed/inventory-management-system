@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Package, Lock, Mail } from 'lucide-react';
 import axios from 'axios';
-import api from '../services/api';
-import { ApiRoutes, PageRoutes } from '../constants/routes';
+import { authApi } from '../api/auth.api';
+import { PageRoutes } from '../constants/routes';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -18,9 +18,9 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await api.post(ApiRoutes.AUTH.LOGIN, { email, password });
-      if (response.data.success) {
-        localStorage.setItem('token', response.data.data.token);
+      const response = await authApi.login({ email, password });
+      if (response.success) {
+        localStorage.setItem('token', response.data.token);
         navigate(PageRoutes.DASHBOARD, { replace: true });
       }
     } catch (err) {

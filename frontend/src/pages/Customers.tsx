@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Edit, Trash2, Users, BookOpen } from 'lucide-react';
-import api from '../services/api';
-import { ApiRoutes, PageRoutes } from '../constants/routes';
+import { customersApi } from '../api/customers.api';
+import { PageRoutes } from '../constants/routes';
 
 interface Customer {
   id: string;
@@ -25,8 +25,8 @@ export default function Customers() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await api.get(ApiRoutes.CUSTOMERS.BASE);
-      setCustomers(response.data.data);
+      const response = await customersApi.getCustomers();
+      setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers', error);
     } finally {
@@ -42,9 +42,9 @@ export default function Customers() {
     e.preventDefault();
     try {
       if (editingCustomer) {
-        await api.put(ApiRoutes.CUSTOMERS.BY_ID(editingCustomer.id), formData);
+        await customersApi.updateCustomer(editingCustomer.id, formData);
       } else {
-        await api.post(ApiRoutes.CUSTOMERS.BASE, formData);
+        await customersApi.createCustomer(formData);
       }
       setIsModalOpen(false);
       fetchCustomers();
@@ -56,7 +56,7 @@ export default function Customers() {
   const handleDelete = async () => {
     if (!deleteId) return;
     try {
-      await api.delete(ApiRoutes.CUSTOMERS.BY_ID(deleteId));
+      await customersApi.deleteCustomer(deleteId);
       setDeleteId(null);
       fetchCustomers();
     } catch (error) {
